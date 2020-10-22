@@ -128,6 +128,8 @@ import { default as Tooltip } from './tooltip';
 
 import { default as Upload } from './upload';
 
+import { default as Uploader } from './uploader';
+
 import { default as version } from './version';
 
 import { default as Drawer } from './drawer';
@@ -147,6 +149,8 @@ import { default as Result } from './result';
 import { default as Descriptions } from './descriptions';
 import { default as PageHeader } from './page-header';
 import { default as Space } from './space';
+
+import { default as ImgUper } from './ImgUper';
 
 const components = [
   Base,
@@ -213,13 +217,14 @@ const components = [
   Descriptions,
   PageHeader,
   Space,
+  ImgUper,
 ];
 
 const install = function(Vue) {
   components.map(component => {
     Vue.use(component);
   });
-
+  Vue.prototype.$uploader = Uploader;
   Vue.prototype.$message = message;
   Vue.prototype.$notification = notification;
   Vue.prototype.$info = Modal.info;
@@ -304,6 +309,7 @@ export {
   Descriptions,
   PageHeader,
   Space,
+  ImgUper,
 };
 
 export default {

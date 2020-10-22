@@ -1,4 +1,4 @@
-import PropsTypes from '../_util/vue-types';
+import PropsTypes from '../../_util/vue-types';
 
 export const UploadFileStatus = PropsTypes.oneOf([
   'error',

@@ -1,11 +1,11 @@
-import BaseMixin from '../_util/BaseMixin';
-import { getOptionProps, initDefaultProps, getListeners } from '../_util/props-util';
-import getTransitionProps from '../_util/getTransitionProps';
-import { ConfigConsumerProps } from '../config-provider';
+import BaseMixin from '../../_util/BaseMixin';
+import { getOptionProps, initDefaultProps, getListeners } from '../../_util/props-util';
+import getTransitionProps from '../../_util/getTransitionProps';
+// import { ConfigConsumerProps } from '../../config-provider'
 import { previewImage, isImageUrl } from './utils';
-import Icon from '../icon';
-import Tooltip from '../tooltip';
-import Progress from '../progress';
+import { Icon, Tooltip, Progress } from 'ant-design-vue';
+// import Tooltip from '../../tooltip'
+// import Progress from '../../progress'
 import classNames from 'classnames';
 import { UploadListProps } from './interface';
 
@@ -23,9 +23,9 @@ export default {
     showPreviewIcon: true,
     previewFile: previewImage,
   }),
-  inject: {
-    configProvider: { default: () => ConfigConsumerProps },
-  },
+  // inject: {
+  //   configProvider: { default: () => ConfigConsumerProps }
+  // },
   updated() {
     this.$nextTick(() => {
       const { listType, items, previewFile } = this.$props;
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     handlePreview(file, e) {
-      // 改
+      // 改写
       const { preview } = getListeners(this);
       window.event ? (window.event.cancelBubble = true) : e.stopPropagation();
       if (!preview) {
@@ -85,7 +85,7 @@ export default {
         window.open(file.url);
       }
     },
-    handleClose(file) {
+    handleClose(file, e) {
       // 改写
       window.event ? (window.event.cancelBubble = true) : e.stopPropagation();
       this.$emit('remove', file);
@@ -93,7 +93,7 @@ export default {
   },
   render() {
     const {
-      prefixCls: customizePrefixCls,
+      // prefixCls: customizePrefixCls,
       items = [],
       listType,
       showPreviewIcon,
@@ -102,8 +102,9 @@ export default {
       locale,
       progressAttr,
     } = getOptionProps(this);
-    const getPrefixCls = this.configProvider.getPrefixCls;
-    const prefixCls = getPrefixCls('upload', customizePrefixCls);
+    // const getPrefixCls = this.configProvider.getPrefixCls
+    // console.log('uploadList=>render.customizePrefixCls=>', customizePrefixCls)
+    const prefixCls = `ant-upload`;
 
     const list = items.map(file => {
       let progress;
@@ -158,13 +159,14 @@ export default {
       const infoUploadingClass = classNames({
         [`${prefixCls}-list-item`]: true,
         [`${prefixCls}-list-item-${file.status}`]: true,
+        // [`${prefixCls}-list-item-${file.select}`]: true,
         [`${prefixCls}-list-item-list-type-${listType}`]: true,
       });
       const linkProps =
         typeof file.linkProps === 'string' ? JSON.parse(file.linkProps) : file.linkProps;
 
       const removeIcon = showRemoveIcon ? (
-        <Icon type="delete" title={locale.removeFile} onClick={() => this.handleClose(file)} />
+        <Icon type="delete" title={locale.removeFile} onClick={e => this.handleClose(file, e)} />
       ) : null;
       const downloadIcon =
         showDownloadIcon && file.status === 'done' ? (
@@ -223,6 +225,7 @@ export default {
               pointerEvents: 'none',
               opacity: 0.5,
             };
+      // console.log(file.url, '=>file.select=>', file.select)
       const previewIcon = showPreviewIcon ? (
         <a
           href={file.url || file.thumbUrl}
@@ -277,6 +280,7 @@ export default {
         </div>
       );
     });
+
     const listClassNames = classNames({
       [`${prefixCls}-list`]: true,
       [`${prefixCls}-list-${listType}`]: true,

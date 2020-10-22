@@ -1,4 +1,4 @@
-import { filterEmpty, parseStyleText } from './props-util';
+import { filterEmpty, parseStyleText, hasOwn } from './props-util';
 import classNames from 'classnames';
 
 export function cloneVNode(vnode, deep) {
@@ -144,4 +144,8 @@ export function cloneElement(n, nodeProps = {}, deep) {
     node.data.ref = ref;
   }
   return node;
+}
+
+export function isVNode(node) {
+  return node !== null && typeof node === 'object' && hasOwn(node, 'componentOptions');
 }

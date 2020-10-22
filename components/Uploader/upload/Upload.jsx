@@ -3,19 +3,18 @@ import uniqBy from 'lodash/uniqBy';
 import findIndex from 'lodash/findIndex';
 import pick from 'lodash/pick';
 import VcUpload from '../vc-upload';
-import BaseMixin from '../_util/BaseMixin';
-import { getOptionProps, initDefaultProps, hasProp, getListeners } from '../_util/props-util';
-import LocaleReceiver from '../locale-provider/LocaleReceiver';
-import defaultLocale from '../locale-provider/default';
-import { ConfigConsumerProps } from '../config-provider';
+import BaseMixin from '../../_util/BaseMixin';
+import { getOptionProps, initDefaultProps, hasProp, getListeners } from '../../_util/props-util';
+import LocaleReceiver from '../../locale-provider/LocaleReceiver';
+import defaultLocale from '../../locale-provider/default';
+// import { ConfigConsumerProps } from '../../config-provider'
 import Dragger from './Dragger';
 import UploadList from './UploadList';
 import { UploadProps } from './interface';
 import { T, fileToObject, genPercentAdd, getFileItem, removeFileItem } from './utils';
 
 export { UploadProps };
-
-export default {
+const Upload = {
   name: 'AUpload',
   mixins: [BaseMixin],
   inheritAttrs: false,
@@ -32,15 +31,16 @@ export default {
     disabled: false,
     supportServerRender: true,
   }),
-  inject: {
-    configProvider: { default: () => ConfigConsumerProps },
-  },
-  // recentUploadStatus: boolean | PromiseLike<any>;
+  // inject: {
+  //   configProvider: { default: () => ConfigConsumerProps }
+  // },
+  // recentUploadStatus: boolean | PromiseLike<any>
   data() {
     this.progressTimer = null;
     return {
       sFileList: this.fileList || this.defaultFileList || [],
       dragState: 'drop',
+      a: 1,
     };
   },
   watch: {
@@ -48,11 +48,15 @@ export default {
       this.sFileList = val || [];
     },
   },
+  beforeMount() {
+    // console.log('getListeners(this)=>', getListeners(this))
+  },
   beforeDestroy() {
     this.clearProgressTimer();
   },
   methods: {
     onStart(file) {
+      console.log('======onStart======');
       const targetItem = fileToObject(file);
       targetItem.status = 'uploading';
       const nextFileList = this.sFileList.concat();
@@ -72,7 +76,9 @@ export default {
       }
     },
 
-    onSuccess(response, file, xhr) {
+    onSuccess(response, file, xhr, url) {
+      console.log('======onSuccess======');
+      console.log('@===onSuccess==>url==>', url);
       this.clearProgressTimer();
       try {
         if (typeof response === 'string') {
@@ -89,6 +95,7 @@ export default {
       }
       targetItem.status = 'done';
       targetItem.response = response;
+      targetItem.url = response.data.data.url;
       targetItem.xhr = xhr;
       this.onChange({
         file: { ...targetItem },
@@ -96,6 +103,7 @@ export default {
       });
     },
     onProgress(e, file) {
+      console.log('======onProgress======');
       const fileList = this.sFileList;
       const targetItem = getFileItem(file, fileList);
       // removed
@@ -110,6 +118,7 @@ export default {
       });
     },
     onError(error, response, file) {
+      console.log('======onError======');
       this.clearProgressTimer();
       const fileList = this.sFileList;
       const targetItem = getFileItem(file, fileList);
@@ -126,9 +135,11 @@ export default {
       });
     },
     onReject(fileList) {
+      console.log('======onReject======');
       this.$emit('reject', fileList);
     },
     handleRemove(file) {
+      console.log('=========Upload=>handleRemove=>file=>', file, this.a++);
       const { remove: onRemove } = this;
       const { sFileList: fileList } = this.$data;
 
@@ -155,6 +166,7 @@ export default {
       });
     },
     handleManualRemove(file) {
+      console.log('=========Upload=>handleManualRemove=>file=>', file, this.a++);
       if (this.$refs.uploadRef) {
         this.$refs.uploadRef.abort(file);
       }
@@ -166,6 +178,7 @@ export default {
     },
     onChange(info) {
       if (!hasProp(this, 'fileList')) {
+        // console.log('======onChange==>info.fileList==>', info.fileList)
         this.setState({ sFileList: info.fileList });
       }
       this.$emit('change', info);
@@ -242,15 +255,17 @@ export default {
   },
   render() {
     const {
-      prefixCls: customizePrefixCls,
+      // prefixCls: customizePrefixCls,
       showUploadList,
       listType,
       type,
       disabled,
     } = getOptionProps(this);
     const { sFileList: fileList, dragState } = this.$data;
-    const getPrefixCls = this.configProvider.getPrefixCls;
-    const prefixCls = getPrefixCls('upload', customizePrefixCls);
+    // const getPrefixCls = this.configProvider.getPrefixCls
+    // console.log('upload=>render.customizePrefixCls=>', customizePrefixCls)
+    // const prefixCls = getPrefixCls('upload', customizePrefixCls)
+    const prefixCls = `ant-upload`;
 
     const vcUploadProps = {
       props: {
@@ -337,3 +352,4 @@ export default {
     );
   },
 };
+export default Upload;
