@@ -1,14 +1,4 @@
-<!--
- * @Author: fatetoper
- * @Date: 2020-09-20 09:30:37
- * @LastEditors: fatetoper
- * @LastEditTime: 2020-10-22 11:30:29
- * @Modultype: Component
- * @Usage: import/global/prototype
- * @Description: Do not edit
- * @RequiredConponents: Uploader a-row a-col a-form-item a-input a-button
- * @FilePath: \ant-design-vue\components\ImgUper\ImgUper.vue
--->
+
 <template>
   <a-row :gutter="24" style="{ display: 'flex';}">
     <a-col :span="8" style="{ display: 'block' }">
@@ -22,7 +12,6 @@
             },
           ]"
         />
-        <!-- <a-input value='2'></a-input> -->
       </a-form-item>
     </a-col>
     <a-col :span="3" style="{ display: 'block' }">
@@ -159,9 +148,6 @@ export default {
         }),
       );
     },
-    // ,
-    // showPreImg (url,defUrl) {
-    // }
   },
 };
 </script>
