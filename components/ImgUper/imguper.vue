@@ -12,7 +12,7 @@
 <template>
   <a-row :gutter="24" style="{ display: 'flex';}">
     <a-col :span="8" style="{ display: 'block' }">
-      <a-form-item v-bind="formItemLayout" label="首页图">
+      <a-form-item v-bind="formItemLayout" :label="itemName">
         <a-input
           v-decorator="[
             id,
@@ -46,6 +46,11 @@ export default {
     return {};
   },
   props: {
+    itemName: {
+      type: String,
+      required: false,
+      default: '图片',
+    },
     dirname: {
       type: String,
       required: true,
